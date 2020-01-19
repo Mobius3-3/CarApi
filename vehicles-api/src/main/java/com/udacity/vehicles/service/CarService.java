@@ -4,13 +4,11 @@ import com.udacity.vehicles.client.maps.Address;
 import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.persistence.Id;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Implements the car service create, read, update or delete
@@ -67,7 +65,7 @@ public class CarService {
          *   the pricing service each time to get the price.
          */
 
-        String carPrice = String.valueOf(pricing.get().uri("services/price?vehicleId="+id).retrieve());
+        String carPrice = String.valueOf(pricing.getPrice().uri("services/price?vehicleId="+id).retrieve());
         car.get().setPrice(carPrice);
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
@@ -106,6 +104,8 @@ public class CarService {
                         System.out.println(car.getLocation());
                         carToBeUpdated.setDetails(car.getDetails());
                         carToBeUpdated.setLocation(car.getLocation());
+                        carToBeUpdated.setCondition(car.getCondition());
+                        carToBeUpdated.setModifiedAt(car.getModifiedAt());
                         return repository.save(carToBeUpdated);
                     }).orElseThrow(CarNotFoundException::new);
         }
